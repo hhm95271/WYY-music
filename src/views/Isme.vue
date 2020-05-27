@@ -2,20 +2,29 @@
   <div class="Isme">
     <div class="header" :style="{'backgroundImage':'url('+this.coverImgUrl+')'}">
       <img :src="this.coverImgUrl" alt />
-      <p>{{this.name}}</p>
+      <p>{{name}}</p>
     </div>
-    <!-- 简介 -->
-    <div class="intro"></div>
-    <!-- 歌曲列表 -->
+
+    <!-- 歌曲标签 -->
     <div class="songlist">
-      <span>歌曲列表</span>
+      <span>歌曲标签：</span>
+      <ul>
+        <li v-for="(item,index) in tags" :key="index">{{item}}</li>
+      </ul>
+    </div>
+    <!-- 歌曲简介 -->
+    <div class="intro">
+      <span>
+        <i>简介：</i>
+        {{description}}
+      </span>
     </div>
     <!-- 歌曲item -->
     <div class="song_item">
       <div
         class="item"
         @click="getMusic(item.id,index)"
-        v-for="(item,index) in this.tracks"
+        v-for="(item,index) in tracks"
         :key="index"
       >
         <div class="item_left">
@@ -29,17 +38,12 @@
       </div>
     </div>
     <!-- 播放器 -->
-    <Player />
   </div>
 </template>
 
 <script>
 import axios from "@/router/myaxios";
-import Player from "@/views/player";
 export default {
-  components: {
-    Player
-  },
   data() {
     return {
       //头部背景
@@ -47,7 +51,9 @@ export default {
       // 头部描述
       name: "",
       tracks: [],
-      url: ""
+      url: "",
+      tags: [],
+      description: ""
     };
   },
   methods: {
@@ -55,25 +61,35 @@ export default {
       axios({
         url: `/song/url?id=${id}`
       }).then(res => {
-        this.$store.state.id = id;
-        // console.log(this.$store.state.id);
-        let { data } = res.data;
-        console.log(data + "1");
-        this.url = this.tracks[index].al.picUrl;
-        this.$store.state.picUrl = this.url;
+        // 获取歌曲mp3
+        let { id, url } = res.data.data[0];
+        sessionStorage.setItem("lyric", id);
+        sessionStorage.setItem("picUrl", this.tracks[index].al.picUrl);
+        sessionStorage.setItem("lyric_url", url);
+        this.$store.state.audio.currentTime = this.tracks[index].dt;
+        console.log(this.$store.state.audio.currentTime);
+        this.$router.push({ path: `Lyric?lyric=` + id });
       });
     },
 
-    // song/url?id=
-    getAllitem() {
+    getAllitem(id) {
+      id = this.$route.query.id;
+      sessionStorage.setItem("Isme_id", id);
       axios({
-        url: `/playlist/detail?id=${this.$store.state.id}`
+        url: `/playlist/detail?id=${id}`
       }).then(res => {
-        console.log(res);
-        let { coverImgUrl, name, tracks } = res.data.playlist;
+        let {
+          description,
+          tags,
+          coverImgUrl,
+          name,
+          tracks
+        } = res.data.playlist;
         this.coverImgUrl = coverImgUrl;
         this.name = name;
         this.tracks = tracks;
+        this.tags = tags;
+        this.description = description;
       });
     }
   },
@@ -84,8 +100,26 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.intro {
+  border-bottom: 1px solid #e3e5f9;
+  text-align: left;
+  width: 95%;
+  margin: auto;
+  span {
+    color: rgba(211, 166, 173, 0.897);
+    font-size: 12px;
+    text-align: left;
+    i {
+      font-style: normal;
+      color: #666;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  }
+}
 .song_item {
   width: 100%;
+  margin-bottom: 55px;
   .item {
     margin: auto;
     width: 90%;
@@ -129,13 +163,24 @@ export default {
   }
   .songlist {
     width: 100%;
-    height: 8%;
+    display: flex;
+    padding: 10px 0;
     background: #eeeff0;
     color: #666;
     font-size: 12px;
     margin-bottom: 7px;
     text-align: left;
     text-indent: 10px;
+    ul {
+      color: rgba(211, 166, 173, 0.897);
+      display: flex;
+      li {
+        text-align: center;
+        background: #fff;
+        border-radius: 50%;
+        padding-right: 5px;
+      }
+    }
   }
 }
 </style>

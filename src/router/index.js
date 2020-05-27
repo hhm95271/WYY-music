@@ -5,12 +5,18 @@ import Isme from '@/views/Isme.vue'
 import Player from '@/views/player.vue'
 import Header from '@/views/public/header.vue'
 import Footer from '@/views/public/footer.vue'
+import Lyric from '@/views/users/lyric.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/Isme',
+    path: '/Lyric',
+    name: 'Lyric',
+    component: Lyric
+  },
+  {
+    path: `/Isme`,
     name: 'Isme',
     component: Isme
   },

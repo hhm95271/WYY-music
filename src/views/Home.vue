@@ -57,8 +57,8 @@ export default {
   },
   methods: {
     getlocaltion(id) {
-      this.$store.state.id = id;
-      this.$router.push({ path: "/Isme" });
+      // this.$store.state.id = id;
+      this.$router.push({ path: `Isme?id=` + id });
     }
   },
 

@@ -20,17 +20,14 @@
       </div>
     </div>
     <!-- 播放器 -->
-    <Player />
+
     <!--  -->
   </div>
 </template>
 <script>
 import axios from "@/router/myaxios";
-import Player from "@/views/player";
+
 export default {
-  components: {
-    Player
-  },
   data() {
     return {
       tracks: [],
@@ -41,25 +38,19 @@ export default {
   methods: {
     // 获取歌曲 url 链接
     play_btn(index) {
+      // console.log(this.tracks);
       this.$store.state.id = this.tracks[index].id;
-      console.log(this.$store.state.id);
-      // axios({
-      //   url: `/song/url?id=${this.id}`
-      // }).then(res => {
-      //   var { data } = res.data;
-      //   setTimeout(() => {
-      //     this.srcmp3 = data[0].url;
-      //   }, 2000);
-      //   this.picUrl = this.tracks[index].al.picUrl;
-      //   // console.log(this.picUrl);
-      // });
+      console.log(this.tracks[index].id);
       axios({
-        url: "/playlist/detail?id=19723756",
+        url: `/song/url?id=${this.$store.state.id}`,
         method: "post"
       }).then(res => {
-        let list = res.data.playlist.tracks;
-        this.val = list[index].name;
-        this.$store.state.picUrl = this.tracks[index].al.picUrl;
+        console.log(res);
+        let { id, url } = res.data.data[0];
+        sessionStorage.setItem("lyric", id);
+        sessionStorage.setItem("picUrl", this.tracks[index].al.picUrl);
+        sessionStorage.setItem("lyric_url", url);
+        this.$router.push({ path: `Lyric?lyric=` + id });
       });
     },
     // 热歌数据获取

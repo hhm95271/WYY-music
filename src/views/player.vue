@@ -7,14 +7,15 @@
     </div>
     <div class="player_titile">{{this.val}}</div>
     <div class="player_btn" @click="player_button">
-      <span @click="play" v-if="!isPlaying" class="iconfont icon-bofang"></span>
-      <span @click="stop" v-if="isPlaying" class="iconfont icon-zanting"></span>
+      <span @click="play" v-show="!isPlaying" class="iconfont icon-zanting"></span>
+      <span @click="stop" v-show="isPlaying" class="iconfont icon-bofang"></span>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "@/router/myaxios";
+import { Toast } from "mint-ui";
 export default {
   data() {
     return {
@@ -29,27 +30,29 @@ export default {
     //暂停
     stop() {
       let audio = document.querySelector(".audio");
-      if (this.isPlaying) {
-        audio.pause();
-        this.isPlaying = false;
-      }
+      audio.pause();
+      this.isPlaying = false;
     },
     // 播放
     play() {
-      let audio = document.querySelector(".audio");
-      if (!this.isPlaying && this.picUrl != "") {
-        console.log(123);
-        audio.play();
-        this.isPlaying = true;
-      }
+      // let audio = document.querySelector(".audio");
+      Toast({
+        message: "播放",
+        position: "top",
+        duration: 400
+      });
+      // audio.play();
+      this.isPlaying = true;
     },
     //
     player_button() {
+      let id = this.$store.state.id;
       axios({
-        url: `/song/url?id=${this.$store.state.id}`
+        url: `/song/url?id=${id}`
       }).then(res => {
         this.srcmp3 = res.data.data[0].url;
         this.picUrl = this.$store.state.picUrl;
+        this.val = this.$store.state.name;
       });
     }
   }
