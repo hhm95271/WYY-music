@@ -43,12 +43,17 @@
     </div>
     <!-- 底部 -->
     <footer>练习demo：仿网易云音乐</footer>
+    <Footer />
   </div>
 </template>
 
 <script>
 import axios from "@/router/myaxios";
+import Footer from "@/views/public/footer";
 export default {
+  components: {
+    Footer
+  },
   data() {
     return {
       value: "",
@@ -58,7 +63,7 @@ export default {
   methods: {
     getlocaltion(id) {
       // this.$store.state.id = id;
-      this.$router.push({ path: `Isme?id=` + id });
+      this.$router.push({ path: `/Isme?id=` + id });
     }
   },
 
@@ -68,7 +73,6 @@ export default {
     }).then(res => {
       let playlists = res.data.playlists;
       this.playlists = playlists;
-      console.log(this.playlists);
     });
   }
 };

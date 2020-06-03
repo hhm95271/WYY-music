@@ -2,18 +2,12 @@
   <div id="app">
     <!-- <Header /> -->
     <router-view />
-    <Footer />
   </div>
 </template>
 <script>
 // import Header from "./views/public/header";
-import Footer from "./views/public/footer";
-export default {
-  components: {
-    // Header,
-    Footer
-  }
-};
+
+export default {};
 </script>
 <style>
 #app {

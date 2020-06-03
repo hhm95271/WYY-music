@@ -5,9 +5,13 @@
         <img @click="btn1" slot="icon" src="../../../src/assets/home.png" />
         <span>推荐</span>
       </mt-tab-item>
-      <mt-tab-item id="段子">
+      <mt-tab-item id="排行榜">
         <img @click="btn2" slot="icon" src="../../../src/assets/home.png" />
-        <span>热歌</span>
+        <span>排行榜</span>
+      </mt-tab-item>
+      <mt-tab-item id="我的">
+        <img @click="btn3" slot="icon" src="../../../src/assets/home.png" />
+        <span>我的</span>
       </mt-tab-item>
     </mt-tabbar>
   </div>
@@ -26,6 +30,9 @@ export default {
     },
     btn2() {
       this.$router.push("/about");
+    },
+    btn3() {
+      this.$router.push("/login");
     }
   }
 };

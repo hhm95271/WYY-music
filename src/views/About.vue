@@ -1,173 +1,163 @@
 <template>
-  <!-- 段子页 -->
-
-  <div class="about">
-    <header>
-      <div class="content"></div>
-      <p>更新时间：5/14</p>
-    </header>
-    <div class="box">
-      <div class="box_item" @click="play_btn(index)" v-for="(item,index) in tracks" :key="index">
-        <div class="item_left">
-          <h5>
-            {{item.name}}
-            <i>{{item.alia[0]}}</i>
-          </h5>
-          <span>{{item.ar[0].name}}</span>
+  <div class="About">
+    <div class="rank">
+      <!-- 官方榜 -->
+      <div class="rank-officials">
+        <span>官方榜</span>
+        <div
+          class="rank-item"
+          @click="loginRankList(item)"
+          v-for="(item,index) in officials"
+          :key="index"
+        >
+          <div class="item-left">
+            <img :src="item.coverImgUrl" alt />
+          </div>
+          <div class="item-right">
+            <ul>
+              <li>1.{{item.tracks[0].name}}-{{item.tracks[0].ar[0].name}}</li>
+              <li>2.{{item.tracks[1].name}}-{{item.tracks[1].ar[0].name}}</li>
+              <li>3.{{item.tracks[2].name}}-{{item.tracks[2].ar[0].name}}</li>
+            </ul>
+          </div>
         </div>
-        <!-- 播放按钮 -->
-        <div class="icon_btn"></div>
       </div>
     </div>
-    <!-- 播放器 -->
-
-    <!--  -->
+    <!-- 更多 -->
+    <div class="morelist">
+      <span>更多榜单</span>
+      <div
+        class="morelist-item"
+        @click="loginRankList(item)"
+        v-for="(item,index) in morelist"
+        :key="index"
+      >
+        <div class="list-top">
+          <img :src="item.coverImgUrl" alt />
+          <span>{{item.name}}</span>
+        </div>
+      </div>
+    </div>
+    <Footer></Footer>
   </div>
 </template>
+
 <script>
 import axios from "@/router/myaxios";
-
+import Footer from "@/views/public/footer";
 export default {
+  components: {
+    Footer
+  },
   data() {
     return {
-      tracks: [],
-      picUrl: "",
-      imgUrl: ""
+      //官方榜单
+      officials: [],
+      //更多榜单
+      morelist: []
     };
   },
   methods: {
-    // 获取歌曲 url 链接
-    play_btn(index) {
-      // console.log(this.tracks);
-      this.$store.state.id = this.tracks[index].id;
-      console.log(this.tracks[index].id);
-      axios({
-        url: `/song/url?id=${this.$store.state.id}`,
-        method: "post"
-      }).then(res => {
-        console.log(res);
-        let { id, url } = res.data.data[0];
-        sessionStorage.setItem("lyric", id);
-        sessionStorage.setItem("picUrl", this.tracks[index].al.picUrl);
-        sessionStorage.setItem("lyric_url", url);
-        this.$router.push({ path: `Lyric?lyric=` + id });
+    // 进入选中的榜单中
+    loginRankList(item) {
+      let commentid = item.commentThreadId;
+      let id = commentid.slice(7);
+      this.$router.push({
+        path: `/rankList?`,
+        query: {
+          id
+        }
       });
     },
-    // 热歌数据获取
-    getAllhot() {
-      axios({
-        url: "/playlist/detail?id=19723756",
-        method: "post"
-      })
-        .then(res => {
-          var { tracks } = res.data.playlist;
-          // console.log(tracks[0]);
-          this.tracks = tracks;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    // 官方榜单
+    official() {
+      for (var i = 0; i <= 33; i++) {
+        if (i <= 4) {
+          axios({
+            url: `/top/list?idx=${i}`
+          }).then(res => {
+            this.officials.push(res.data.playlist);
+          });
+        } else {
+          axios({
+            url: `/top/list?idx=${i}`
+          }).then(res => {
+            this.morelist.push(res.data.playlist);
+          });
+        }
+      }
     }
   },
-  watch: {},
   mounted() {
-    this.getAllhot();
+    //
+    this.official();
   }
 };
 </script>
-<style lang='less' scoped>
-header {
-  margin-bottom: 5px;
-  font-size: 12px;
-  color: #fff;
-  text-align: left;
-  width: 100%;
-  height: 125px;
-  background: url("../assets/arr_1.jpg") no-repeat;
-  background-size: 50% * 2 50% * 2;
-  position: relative;
-  p {
-    margin-top: 10px;
-    text-indent: 20px;
-  }
-  .content {
-    width: 55%;
-    height: 70%;
-    background: url("../assets/index_icon_2x.png") no-repeat;
-    background-size: 100% 100%;
-  }
-}
-.player {
-  color: #fff;
-  width: 100%;
-  height: 40px;
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  display: flex;
-  justify-content: space-around;
-  background: rgba(224, 79, 12, 0.651);
-  line-height: 40px;
-  .player_btn span {
-    font-size: 30px;
-  }
-  .player_img {
-    width: 40px;
-    height: 100%;
-    //旋转
-    animation: circling 8s linear 0s infinite;
-    @keyframes circling {
-      from {
-        transform: rotate(0deg);
+
+<style lang="less" scoped>
+.morelist {
+  .morelist-item {
+    float: left;
+    width: 30%;
+    height: 8.4375rem;
+    margin-bottom: 1rem;
+    margin-left: 0.33rem;
+    .list-top {
+      text-align: left;
+      img {
+        border-radius: 5px;
+        width: 100%;
       }
-      to {
-        transform: rotate(360deg);
+      span {
+        font-size: 0.63rem;
       }
     }
   }
-  .player_img img {
-    border-radius: 50%;
-  }
 }
-.box {
-  margin-bottom: 60px;
+.rank-officials > span,
+.morelist > span {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: left;
+  display: block;
 }
-.box_item {
-  border-bottom: 1px solid #f1f3f9;
-  display: flex;
-  justify-content: space-between;
+.rank {
   width: 90%;
   margin: auto;
-  height: 55px;
-  .item_left {
+}
+.About {
+  .rank-item {
+    height: 90px;
+    width: 100%;
+    margin: auto;
     display: flex;
-    justify-content: space-around;
-    flex-direction: column;
-    flex: 1;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    text-align: left;
-    span {
-      font-size: 12px;
-    }
-    h5 {
-      font-size: 14px;
-      i {
-        color: #999;
-        font-weight: 200;
+    flex-direction: row;
+    margin-bottom: 0.8rem;
+    .item-left {
+      width: 91px;
+      height: 100%;
+      margin-right: 10px;
+      img {
+        height: 100%;
+        border-radius: 5px;
       }
     }
-  }
-  .icon_btn {
-    border-radius: 50%;
-    height: 75%;
-    width: 55px;
-    // border: 1px solid red;
-    background: url("../assets/index_icon_2x.png") no-repeat;
-    background-size: 280% 270%;
-    background-position: -15px 10px;
+    .item-right {
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      ul {
+        li {
+          margin-top: 0.5rem;
+          font-size: 0.8rem;
+          color: #888;
+        }
+      }
+    }
   }
 }
 </style>

@@ -1,5 +1,7 @@
 <template>
   <div class="Isme">
+    <!-- 返回按钮 -->
+    <div class="go" @click="goTo">&lt;</div>
     <div class="header" :style="{'backgroundImage':'url('+this.coverImgUrl+')'}">
       <img :src="this.coverImgUrl" alt />
       <p>{{name}}</p>
@@ -43,6 +45,7 @@
 
 <script>
 import axios from "@/router/myaxios";
+
 export default {
   data() {
     return {
@@ -57,6 +60,9 @@ export default {
     };
   },
   methods: {
+    goTo() {
+      this.$router.go(-1);
+    },
     getMusic(id, index) {
       axios({
         url: `/song/url?id=${id}`
@@ -119,7 +125,6 @@ export default {
 }
 .song_item {
   width: 100%;
-  margin-bottom: 55px;
   .item {
     margin: auto;
     width: 90%;
@@ -141,6 +146,14 @@ export default {
   }
 }
 .Isme {
+  position: relative;
+  .go {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 2rem;
+    padding: 0 0.5rem;
+  }
   .header {
     width: 100%;
     height: 150px;
