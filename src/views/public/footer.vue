@@ -21,20 +21,24 @@
 export default {
   data() {
     return {
-      selected: true
+      selected: true,
     };
   },
   methods: {
     btn1() {
-      this.$router.push("/");
+      this.$router.push('/');
     },
     btn2() {
-      this.$router.push("/about");
+      this.$router.push('/about');
     },
     btn3() {
-      this.$router.push("/login");
-    }
-  }
+      if (sessionStorage.getItem('uid')) {
+        this.$router.push('/User1');
+      } else {
+        this.$router.push('/login');
+      }
+    },
+  },
 };
 </script>
 

@@ -2,116 +2,150 @@
   <div class="lyric">
     <!-- 头部返回按钮 -->
     <div class="headers">
-      <span @click="go" class="iconfont icon-guanbi"></span>
+      <span @click="go" class="iconfont 1_music83 icon-1_music83"></span>
     </div>
     <!-- 图片播放 -->
     <div class="song_wrap">
-      <i class="iconfont icon-zanting" v-show="icon" @click="clicks"></i>
+      <i
+        style="color:#333"
+        class="iconfont 1_music94 icon-1_music94"
+        v-show="icon"
+        @click="clicks"
+      ></i>
       <div class="song_disc">
-        <div class="song_img an" @click="stop" :style="{'animation-play-state':isan}">
+        <div
+          class="song_img an"
+          @click="stop"
+          :style="{ 'animation-play-state': isan }"
+        >
           <img :src="picUrl" alt />
         </div>
       </div>
     </div>
     <!-- 歌词显示 -->
-    <div class="lyric_item">
-      <ul class="ul">
-        <li v-for="(item,index) in songLyric" :key="index">{{item.words}}</li>
-      </ul>
+    <div class="lyric_item" ref="box">
+      <div id="a">
+        <div
+          class="lyric_songs"
+          v-for="(item, index) in songLyric"
+          :key="index"
+        >
+          <p :class="{ active: isActive }">{{ item.words }}</p>
+        </div>
+      </div>
     </div>
-    <audio :src="url"></audio>
+    <audio :src="url" ref="audio"></audio>
+    <!-- 播放时间 -->
+    <div class="playTime">
+      <mt-range :barHeight="num" v-model="rangeValue">
+        <!-- 当前播放时间 -->
+        <div slot="start" ref="currttime">{{ currentTime }}</div>
+        <div slot="end">{{ maxTime }}</div>
+        <!-- 总时长 -->
+      </mt-range>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from "@/router/myaxios";
+import axios from '@/router/myaxios';
 export default {
   data() {
     return {
+      isActive: false,
+      num: 5,
+      rangeValue: 0,
       // 音乐动画
-      isan: "",
+      isan: '',
       //
-      url: "",
+      url: '',
+      //音乐总时长
+      maxTime: '',
+      maxTimes: 0,
+      currentTime: '0:0', //当前时间
+      currentTimes: 0, //当前时间
       songLyric: [],
       word: [],
-      picUrl: "",
+      picUrl: '',
       // 暂停图标
       icon: true,
-      rotateVal: 0 // 旋转角度
     };
   },
+  watch: {},
   methods: {
-    // 返回上一层
-    go() {
-      this.$router.go(-1);
-    },
-
-    // 暂停
-    stop() {
-      var audio = document.querySelector("audio");
-      // var song_img = document.querySelector(".song_img");
-      audio.pause();
-      this.icon = true;
-      this.isan = "paused";
-    },
-    // 播放
-    clicks() {
-      var audio = document.querySelector("audio");
-      // var song_img = document.querySelector(".song_img");
-      this.icon = false;
-      audio.play();
-      this.isan = "running";
-    },
-    //图片css3旋转
-    // rotate(img) {
-    //   setInterval(() => {
-    //     this.rotateVal += 1;
-    //     img.style.transform = "rotate(" + this.rotateVal + "deg)";
-    //     img.style.transition = "0.1s linear";
-    //   }, 100);
-    // },
-    //获取播放时间
-    getSong() {
-      //当前时间 223040
-
-      console.log(this.maxTime);
-      // 26条 i>0 i-1
-      for (let i = this.songLyric.length - 1; i > 0; i--) {
-        let liobj = this.songLyric[i];
-        // console.log(this.songLyric[i]);
-        if (this.maxTime >= liobj.time) {
-          return i;
+    getindex() {
+      // 当前播放时间
+      var audio = document.querySelector('audio');
+      this.currentTime = audio.currentTime;
+      var playTime = audio.currentTime;
+      for (var a = this.songLyric.length - 1; a >= 0; a--) {
+        var isp = this.songLyric[a];
+        if (playTime >= isp.time) {
+          return a;
         }
       }
       return -1;
     },
-    //动态添加歌词效果
-    actives() {
-      // index 33 条歌词
-      let index = this.getSong();
-      let ul = document.querySelector(".ul");
-      let li = document.querySelector("active");
-      if (li) {
-        li.className = "";
-      }
-      if (index !== -1) {
-        ul.children[index].className = "active";
-      }
-      // 歌词滚动
-      let configs = {
-        // ul高度
-        ulHeight: 500,
-        // li高度
-        liHeight: 12
+    // 歌词滚动条
+    scroll() {
+      var index = this.getindex();
+      // var a = document.querySelector('#a').scrollHeight;
+      var configs = {
+        psHeight: 40,
+        divHeight: 340,
       };
-      //  235 高度
-      var midHeight = configs.ulHeight / 2 - configs.liHeight / 2;
-      //
-      var marginTop = midHeight - index * configs.liHeight;
-      if (marginTop < 0) {
-        marginTop = 0;
+      // 155
+      var mid = configs.divHeight / 2 - configs.psHeight / 2;
+      if (this.currentTime === this.maxTime) {
+        this.$refs.box.scrollTop = 0;
       }
-      ul.style.marginTop = marginTop + "px";
+      if (index > 5) {
+        this.$refs.box.scrollTop = index * configs.psHeight - mid;
+      }
+      this.rangeValue = (this.currentTimes / this.maxTimes) * 100;
+      this.setroll();
+    },
+    // 动态添加歌词效果
+    setroll() {
+      // 返回第几行歌词
+      let index = this.getindex();
+      let p = Array.from(document.querySelectorAll('.lyric_songs p'));
+      p.forEach((e) => {
+        e.className = '';
+        if (index != -1) {
+          p[index].className = 'active';
+        }
+      });
+      this.currentTime = this.timetransform(this.currentTime);
+    },
+    // 返回上一层
+    go() {
+      this.stop();
+      this.$router.go(-1);
+    },
+    // 暂停
+    stop() {
+      var audio = document.querySelector('audio');
+      audio.pause();
+      this.icon = true;
+      this.isan = 'paused';
+    },
+    // 播放
+    clicks() {
+      var audio = document.querySelector('audio');
+      this.icon = false;
+      audio.play();
+      this.isan = 'running';
+    },
+    // 时间转换
+    timetransform(s) {
+      s = Math.round(s);
+      this.currentTimes = s;
+      var h = Math.floor(s / 60);
+      s = s % 60;
+      h = h.length == 1 ? '0' + h : h;
+      s = s.length == 1 ? '0' + s : s;
+      return h + ':' + s;
     },
     // 获取歌曲信息
     btn() {
@@ -119,43 +153,79 @@ export default {
       this.url = sessionStorage.lyric_url;
       this.picUrl = sessionStorage.picUrl;
       axios({
-        url: `/lyric?id=${id}`
-      }).then(res => {
-        // console.log(res);
+        url: `/lyric?id=${id}`,
+      }).then((res) => {
         let { lyric } = res.data.lrc;
         // 将 lyric 变为数组
-        this.songLyric = lyric.split("\n");
+        this.songLyric = lyric.split('\n');
         for (let i = 0; i < this.songLyric.length; i++) {
           let str = this.songLyric[i];
           this.songLyric[i] = this.createObj(str);
         }
+        this.maxTime = this.$refs.audio.duration;
+        this.maxTimes = Math.round(this.maxTime);
+        this.maxTime = this.timetransform(this.maxTime);
       });
     },
     // 转换为单句对象
     createObj(str) {
-      let obj = str.split("]");
+      let obj = str.split(']');
       let time = obj[0];
       let words = obj[1];
-      time = time.replace("[", ""); //去除左侧的 [
+      time = time.replace('[', ''); //去除左侧的 [
       //将时间转为秒
-      let times = time.split(":");
+      let times = time.split(':');
       let min = times[0];
       let second = times[1];
       time = parseInt(min * 60) + parseFloat(second);
       return {
-        time: time,
-        words: words
+        time: Math.round(time * 100) / 100,
+        words: words,
       };
-    }
+    },
+    setIntervals() {
+      setInterval(() => {
+        if (this.currentTime !== this.maxTime) {
+          this.scroll();
+        } else {
+          this.stop();
+          this.currentTime = '0:0';
+          document.querySelector('audio').currentTime = 0;
+        }
+      }, 1000);
+    },
   },
-  mounted() {},
+  mounted() {
+    this.setIntervals();
+  },
   created() {
     this.btn();
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
+.active {
+  color: #26a2ff;
+  font-weight: 600;
+  font-size: 1.2rem !important;
+}
+.playTime {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2.5rem;
+  color: #fff;
+  /deep/.mt-range-progress {
+    background-color: #fff;
+  }
+  /deep/.mt-range-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    top: 15%;
+  }
+}
 .an {
   animation: rotate 10s linear infinite;
   animation-play-state: paused;
@@ -173,15 +243,21 @@ export default {
 }
 
 .lyric {
-  margin-bottom: 55px;
-  background: url("http://p3.music.126.net/PbzE5dRHoL1leZughowomA==/17676848440011124.jpg")
-    no-repeat;
+  display: flex;
+  flex-direction: column;
+  background: black;
   .lyric_item {
-    ul {
-      li {
-        font-size: 0.9rem;
-        color: #ccc;
-        margin-bottom: 10px;
+    height: 21.25rem;
+    padding-bottom: 1rem;
+    color: #fff;
+    overflow-y: scroll;
+    #a {
+      .lyric_songs {
+        height: 2.5rem;
+        line-height: 2.5rem;
+        p {
+          font-size: 1rem;
+        }
       }
     }
   }
@@ -221,7 +297,7 @@ export default {
     line-height: 35px;
     span {
       color: #fff;
-      font-size: 30px;
+      font-size: 25px;
     }
     span:hover {
       color: pink;

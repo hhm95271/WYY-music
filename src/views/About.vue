@@ -1,17 +1,17 @@
 <template>
   <div class="About">
+    <Header :title="title" />
     <div class="rank">
       <!-- 官方榜 -->
       <div class="rank-officials">
         <span>官方榜</span>
-        <div
-          class="rank-item"
-          @click="loginRankList(item)"
-          v-for="(item,index) in officials"
-          :key="index"
-        >
+        <div class="rank-item"
+             @click="loginRankList(item)"
+             v-for="(item,index) in officials"
+             :key="index">
           <div class="item-left">
-            <img :src="item.coverImgUrl" alt />
+            <img :src="item.coverImgUrl"
+                 alt />
           </div>
           <div class="item-right">
             <ul>
@@ -22,19 +22,19 @@
           </div>
         </div>
       </div>
-    </div>
-    <!-- 更多 -->
-    <div class="morelist">
-      <span>更多榜单</span>
-      <div
-        class="morelist-item"
-        @click="loginRankList(item)"
-        v-for="(item,index) in morelist"
-        :key="index"
-      >
-        <div class="list-top">
-          <img :src="item.coverImgUrl" alt />
-          <span>{{item.name}}</span>
+
+      <!-- 更多 -->
+      <div class="morelist">
+        <span>推荐榜单</span>
+        <div class="morelist-item"
+             @click="loginRankList(item)"
+             v-for="(item,index) in morelist"
+             :key="index">
+          <div class="list-top">
+            <img :src="item.coverImgUrl"
+                 alt />
+            <span>{{item.name}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -45,12 +45,15 @@
 <script>
 import axios from "@/router/myaxios";
 import Footer from "@/views/public/footer";
+import Header from "@/views/public/header";
 export default {
   components: {
-    Footer
+    Footer,
+    Header
   },
   data() {
     return {
+      title: "排行榜",
       //官方榜单
       officials: [],
       //更多榜单
@@ -71,20 +74,27 @@ export default {
     },
     // 官方榜单
     official() {
-      for (var i = 0; i <= 33; i++) {
+      for (var i = 0; i <= 4; i++) {
         if (i <= 4) {
           axios({
             url: `/top/list?idx=${i}`
           }).then(res => {
-            this.officials.push(res.data.playlist);
-          });
-        } else {
-          axios({
-            url: `/top/list?idx=${i}`
-          }).then(res => {
-            this.morelist.push(res.data.playlist);
+            let { playlist } = res.data;
+            this.officials.push(playlist);
           });
         }
+      }
+      for (var a = 5; a <= 33; a++) {
+        axios({
+          url: `/top/list?idx=${a}`
+        })
+          .then(res => {
+            let { playlist } = res.data;
+            this.morelist.push(playlist);
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
     }
   },
@@ -97,6 +107,11 @@ export default {
 
 <style lang="less" scoped>
 .morelist {
+  .morelist-item:nth-last-child(1),
+  .morelist-item:nth-last-child(2),
+  .morelist-item:nth-last-child(3) {
+    margin-bottom: 3rem;
+  }
   .morelist-item {
     float: left;
     width: 30%;
@@ -110,13 +125,14 @@ export default {
         width: 100%;
       }
       span {
-        font-size: 0.63rem;
+        font-size: 0.75rem;
       }
     }
   }
 }
 .rank-officials > span,
-.morelist > span {
+.morelist > span,
+.recommend > span {
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -126,6 +142,7 @@ export default {
 .rank {
   width: 90%;
   margin: auto;
+  margin-bottom: 4.75rem;
 }
 .About {
   .rank-item {

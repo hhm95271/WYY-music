@@ -1,18 +1,25 @@
 <template>
-  <header>
-    <mt-header fixed title="我的移动端"></mt-header>
-  </header>
+  <div class="header">
+    <span>{{ title }}</span>
+  </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ['title'],
+};
 </script>
 
-<style>
-header {
-  margin-bottom: 40px;
-}
-.mint-header-title {
-  font-size: 1.5rem;
+<style lang="less" scoped>
+.header {
+  width: 100%;
+  height: 3.125rem;
+  background: #26a2ff;
+  line-height: 3.125rem;
+  font-weight: 600;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 </style>

@@ -1,41 +1,51 @@
 <template>
   <div class="Isme">
     <!-- 返回按钮 -->
-    <div class="go" @click="goTo">&lt;</div>
-    <div class="header" :style="{'backgroundImage':'url('+this.coverImgUrl+')'}">
+    <div
+      class="go iconfont 1_music83
+icon-1_music83"
+      @click="goTo"
+    ></div>
+    <div
+      class="header"
+      :style="{ backgroundImage: 'url(' + this.coverImgUrl + ')' }"
+    >
       <img :src="this.coverImgUrl" alt />
-      <p>{{name}}</p>
+      <p>{{ name }}</p>
     </div>
 
     <!-- 歌曲标签 -->
     <div class="songlist">
       <span>歌曲标签：</span>
       <ul>
-        <li v-for="(item,index) in tags" :key="index">{{item}}</li>
+        <li v-for="(item, index) in tags" :key="index">{{ item }}</li>
       </ul>
     </div>
     <!-- 歌曲简介 -->
     <div class="intro">
       <span>
         <i>简介：</i>
-        {{description}}
+        {{ description }}
       </span>
     </div>
     <!-- 歌曲item -->
     <div class="song_item">
       <div
         class="item"
-        @click="getMusic(item.id,index)"
-        v-for="(item,index) in tracks"
+        @click="getMusic(item.id, index)"
+        v-for="(item, index) in tracks"
         :key="index"
       >
         <div class="item_left">
-          <div class="top">{{item.name}}</div>
-          <div class="bottom">{{item.ar[0].name}}-{{item.al.name}}</div>
+          <div class="top">{{ item.name }}</div>
+          <div class="bottom">{{ item.ar[0].name }}-{{ item.al.name }}</div>
         </div>
         <!-- 右侧图标 -->
         <div class="item-right">
-          <span class="iconfont icon-bofang"></span>
+          <span
+            class="iconfont 1_music73
+icon-1_music73"
+          ></span>
         </div>
       </div>
     </div>
@@ -44,19 +54,19 @@
 </template>
 
 <script>
-import axios from "@/router/myaxios";
+import axios from '@/router/myaxios';
 
 export default {
   data() {
     return {
       //头部背景
-      coverImgUrl: "",
+      coverImgUrl: '',
       // 头部描述
-      name: "",
+      name: '',
       tracks: [],
-      url: "",
+      url: '',
       tags: [],
-      description: ""
+      description: '',
     };
   },
   methods: {
@@ -65,13 +75,13 @@ export default {
     },
     getMusic(id, index) {
       axios({
-        url: `/song/url?id=${id}`
-      }).then(res => {
+        url: `/song/url?id=${id}`,
+      }).then((res) => {
         // 获取歌曲mp3
         let { id, url } = res.data.data[0];
-        sessionStorage.setItem("lyric", id);
-        sessionStorage.setItem("picUrl", this.tracks[index].al.picUrl);
-        sessionStorage.setItem("lyric_url", url);
+        sessionStorage.setItem('lyric', id);
+        sessionStorage.setItem('picUrl', this.tracks[index].al.picUrl);
+        sessionStorage.setItem('lyric_url', url);
         this.$store.state.audio.currentTime = this.tracks[index].dt;
         console.log(this.$store.state.audio.currentTime);
         this.$router.push({ path: `Lyric?lyric=` + id });
@@ -80,16 +90,16 @@ export default {
 
     getAllitem(id) {
       id = this.$route.query.id;
-      sessionStorage.setItem("Isme_id", id);
+      sessionStorage.setItem('Isme_id', id);
       axios({
-        url: `/playlist/detail?id=${id}`
-      }).then(res => {
+        url: `/playlist/detail?id=${id}`,
+      }).then((res) => {
         let {
           description,
           tags,
           coverImgUrl,
           name,
-          tracks
+          tracks,
         } = res.data.playlist;
         this.coverImgUrl = coverImgUrl;
         this.name = name;
@@ -97,11 +107,11 @@ export default {
         this.tags = tags;
         this.description = description;
       });
-    }
+    },
   },
   mounted() {
     this.getAllitem();
-  }
+  },
 };
 </script>
 
@@ -150,9 +160,8 @@ export default {
   .go {
     position: absolute;
     top: 0;
-    left: 0;
+    left: -0.6875rem;
     font-size: 2rem;
-    padding: 0 0.5rem;
   }
   .header {
     width: 100%;

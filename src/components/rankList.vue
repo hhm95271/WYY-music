@@ -1,23 +1,30 @@
 <template>
-  <!-- 段子页 -->
+  <!-- 内容页 -->
 
   <div class="rankList">
-    <div class="goTo" @click="go">&lt;</div>
-    <header :style="image">
+    <div class="goTo iconfont 1_music83 icon-1_music83" @click="go">
+      <span>返回</span>
+    </div>
+    <header class="img">
       <div class="content"></div>
       <p>更新时间：5/14</p>
     </header>
     <div class="box">
-      <div class="box_item" @click="play_btn(index)" v-for="(item,index) in tracks" :key="index">
+      <div
+        class="box_item"
+        @click="play_btn(index)"
+        v-for="(item, index) in tracks"
+        :key="index"
+      >
         <div class="item_left">
           <h5>
-            {{item.name}}
-            <i>{{item.alia[0]}}</i>
+            {{ item.name }}
+            <i>{{ item.alia[0] }}</i>
           </h5>
-          <span>{{item.ar[0].name}}</span>
+          <span>{{ item.ar[0].name }}</span>
         </div>
         <!-- 播放按钮 -->
-        <div class="icon_btn"></div>
+        <div class="icon_btn iconfont 1_music73 icon-1_music73"></div>
       </div>
     </div>
     <!-- 播放器 -->
@@ -26,17 +33,14 @@
   </div>
 </template>
 <script>
-import axios from "@/router/myaxios";
+import axios from '@/router/myaxios';
 export default {
   data() {
     return {
       tracks: [],
-      picUrl: "",
-      imgUrl: "",
-      image: {
-        backgroundImage: `url(${sessionStorage.coverImgUrl})`
-      },
-      createTime: 0
+      picUrl: '',
+      imgUrl: '',
+      createTime: 0,
     };
   },
   methods: {
@@ -50,13 +54,13 @@ export default {
       console.log(this.tracks[index].id);
       axios({
         url: `/song/url?id=${this.$store.state.id}`,
-        method: "post"
-      }).then(res => {
+        method: 'post',
+      }).then((res) => {
         console.log(res);
         let { id, url } = res.data.data[0];
-        sessionStorage.setItem("lyric", id);
-        sessionStorage.setItem("picUrl", this.tracks[index].al.picUrl);
-        sessionStorage.setItem("lyric_url", url);
+        sessionStorage.setItem('lyric', id);
+        sessionStorage.setItem('picUrl', this.tracks[index].al.picUrl);
+        sessionStorage.setItem('lyric_url', url);
         this.$router.push({ path: `Lyric?lyric=` + id });
       });
     },
@@ -64,37 +68,46 @@ export default {
     getAllhot() {
       axios({
         url: `/playlist/detail?id=${this.$route.query.id}`,
-        method: "post"
+        method: 'post',
       })
-        .then(res => {
+        .then((res) => {
           var { tracks } = res.data.playlist;
           this.tracks = tracks;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
-    }
+    },
   },
   watch: {},
   mounted() {
     this.getAllhot();
-  }
+  },
 };
 </script>
-<style lang='less' scoped>
+<style lang="less" scoped>
+.icon_btn {
+  font-size: 1.25rem;
+}
+.img {
+  background: url('http://s3.music.126.net/mobile-new/img/recommand_bg_2x.png?d045fafc60e017b653f8065a87496922=')
+    no-repeat;
+}
 .rankList {
   position: relative;
   .goTo {
     position: absolute;
     top: 0;
-    left: 0px;
-    font-size: 1.5rem;
+    left: -0.8875rem;
+    font-size: 2.5rem;
     font-weight: 600;
     z-index: 2;
-    padding-right: 0.7rem;
-    background: rgba(41, 120, 223, 0.651);
-    color: #26a2ff;
-    text-align: center;
+    color: #666;
+    display: flex;
+    align-items: center;
+    span {
+      font-size: 14px;
+    }
   }
 }
 header {
@@ -104,9 +117,8 @@ header {
   text-align: left;
   width: 100%;
   height: 125px;
-  // background: url("../assets/arr_1.jpg") no-repeat;
   background-size: 50% * 5 50% * 5;
-  background-repeat: "no-repeat";
+  background-repeat: 'no-repeat';
   position: relative;
   filter: brightness(80%);
   p {
@@ -118,7 +130,7 @@ header {
   .content {
     width: 55%;
     height: 70%;
-    background: url("../assets/index_icon_2x.png") no-repeat;
+    background: url('../assets/index_icon_2x.png') no-repeat;
     background-position: 0% 0%;
     filter: none;
     position: absolute;
@@ -159,13 +171,12 @@ header {
     border-radius: 50%;
   }
 }
-.box {
-  margin-bottom: 60px;
-}
+
 .box_item {
   border-bottom: 1px solid #f1f3f9;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 90%;
   margin: auto;
   height: 55px;
@@ -188,15 +199,6 @@ header {
         font-weight: 200;
       }
     }
-  }
-  .icon_btn {
-    border-radius: 50%;
-    height: 75%;
-    width: 55px;
-    // border: 1px solid red;
-    background: url("../assets/index_icon_2x.png") no-repeat;
-    background-size: 280% 270%;
-    background-position: -15px 10px;
   }
 }
 </style>

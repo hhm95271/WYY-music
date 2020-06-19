@@ -12,12 +12,10 @@
     <div class="main">
       <div class="content">
         <div class="content_title">推荐歌单</div>
-        <div
-          class="music_item"
-          @click="getlocaltion(item.id)"
-          v-for="(item,index) in playlists"
-          :key="index"
-        >
+        <div class="music_item"
+             @click="getlocaltion(item.id)"
+             v-for="(item,index) in playlists"
+             :key="index">
           <!-- 左侧 -->
           <div class="item-left">
             <h4>{{item.name}}</h4>
@@ -28,7 +26,8 @@
             </div>
           </div>
           <div class="item-right">
-            <img :src="item.coverImgUrl" alt />
+            <img :src="item.coverImgUrl"
+                 alt />
           </div>
         </div>
       </div>
@@ -36,7 +35,8 @@
     <!-- copy -->
     <div class="copyright">
       <div class="top">
-        <img src="../assets/copy.png" alt />
+        <img src="../assets/copy.png"
+             alt />
       </div>
       <p>Copyright © 1998 - 2019 Tencent All Rights Reserved</p>
       <p>联系电话：0755-86013388 QQ群：552092351</p>
@@ -62,8 +62,7 @@ export default {
   },
   methods: {
     getlocaltion(id) {
-      // this.$store.state.id = id;
-      this.$router.push({ path: `/Isme?id=` + id });
+      this.$router.push({ path: `/Isme?id=${id}` });
     }
   },
 
