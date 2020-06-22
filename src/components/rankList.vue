@@ -2,9 +2,7 @@
   <!-- 内容页 -->
 
   <div class="rankList">
-    <div class="goTo iconfont 1_music83 icon-1_music83" @click="go">
-      <span>返回</span>
-    </div>
+    <div class="goTo iconfont icon-ffanhui-" @click="go"></div>
     <header class="img">
       <div class="content"></div>
       <p>更新时间：5/14</p>
@@ -98,13 +96,11 @@ export default {
   .goTo {
     position: absolute;
     top: 0;
-    left: -0.8875rem;
-    font-size: 2.5rem;
-    font-weight: 600;
+    left: 0;
+    font-size: 2rem;
     z-index: 2;
-    color: #666;
-    display: flex;
-    align-items: center;
+    color: #26a2ff;
+    opacity: 0.6;
     span {
       font-size: 14px;
     }
@@ -131,11 +127,12 @@ header {
     width: 55%;
     height: 70%;
     background: url('../assets/index_icon_2x.png') no-repeat;
-    background-position: 0% 0%;
-    filter: none;
+    background-size: 150% 150%;
+    background-position: 20% 0%;
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 .player {

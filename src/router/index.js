@@ -15,6 +15,16 @@ const routes = [{
     component: resolve => require(['../views/users/user1.vue'], resolve)
   },
   {
+    path: '/recommend',
+    name: 'recommend',
+    component: resolve => require(['../views/public/recommend.vue'], resolve)
+  },
+  {
+    path: '/MV',
+    name: 'MV',
+    component: resolve => require(['../views/public/mv.vue'], resolve)
+  },
+  {
     path: '/Login',
     name: 'Login',
     component: Login

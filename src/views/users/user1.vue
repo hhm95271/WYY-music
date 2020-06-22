@@ -1,6 +1,6 @@
 <template>
   <div class="user1">
-    <Header :title="title"> </Header>
+    <Tab />
 
     <div class="box">
       <div class="icon">
@@ -50,20 +50,16 @@
       </div>
     </div>
     <!-- 私人FM -->
-
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from '@/views/public/header';
-import Footer from '@/views/public/footer';
+import Tab from '@/views/public/tab';
 import aixos from '@/router/myaxios';
 import { MessageBox } from 'mint-ui';
 export default {
   components: {
-    Header,
-    Footer,
+    Tab,
   },
   data() {
     return {

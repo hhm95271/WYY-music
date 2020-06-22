@@ -1,23 +1,30 @@
 <template>
   <div class="About">
-    <Header :title="title" />
+    <Tab />
     <div class="rank">
       <!-- 官方榜 -->
       <div class="rank-officials">
         <span>官方榜</span>
-        <div class="rank-item"
-             @click="loginRankList(item)"
-             v-for="(item,index) in officials"
-             :key="index">
+        <div
+          class="rank-item"
+          @click="loginRankList(item)"
+          v-for="(item, index) in officials"
+          :key="index"
+        >
           <div class="item-left">
-            <img :src="item.coverImgUrl"
-                 alt />
+            <img :src="item.coverImgUrl" alt />
           </div>
           <div class="item-right">
             <ul>
-              <li>1.{{item.tracks[0].name}}-{{item.tracks[0].ar[0].name}}</li>
-              <li>2.{{item.tracks[1].name}}-{{item.tracks[1].ar[0].name}}</li>
-              <li>3.{{item.tracks[2].name}}-{{item.tracks[2].ar[0].name}}</li>
+              <li>
+                1.{{ item.tracks[0].name }}-{{ item.tracks[0].ar[0].name }}
+              </li>
+              <li>
+                2.{{ item.tracks[1].name }}-{{ item.tracks[1].ar[0].name }}
+              </li>
+              <li>
+                3.{{ item.tracks[2].name }}-{{ item.tracks[2].ar[0].name }}
+              </li>
             </ul>
           </div>
         </div>
@@ -25,39 +32,37 @@
 
       <!-- 更多 -->
       <div class="morelist">
-        <span>推荐榜单</span>
-        <div class="morelist-item"
-             @click="loginRankList(item)"
-             v-for="(item,index) in morelist"
-             :key="index">
+        <span>更多推荐榜单</span>
+        <div
+          class="morelist-item"
+          @click="loginRankList(item)"
+          v-for="(item, index) in morelist"
+          :key="index"
+        >
           <div class="list-top">
-            <img :src="item.coverImgUrl"
-                 alt />
-            <span>{{item.name}}</span>
+            <img :src="item.coverImgUrl" alt />
+            <span>{{ item.name }}</span>
           </div>
         </div>
       </div>
     </div>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import axios from "@/router/myaxios";
-import Footer from "@/views/public/footer";
-import Header from "@/views/public/header";
+import axios from '@/router/myaxios';
+import Tab from '@/views/public/tab';
 export default {
   components: {
-    Footer,
-    Header
+    Tab,
   },
   data() {
     return {
-      title: "排行榜",
+      title: '排行榜',
       //官方榜单
       officials: [],
       //更多榜单
-      morelist: []
+      morelist: [],
     };
   },
   methods: {
@@ -68,8 +73,8 @@ export default {
       this.$router.push({
         path: `/rankList?`,
         query: {
-          id
-        }
+          id,
+        },
       });
     },
     // 官方榜单
@@ -77,8 +82,8 @@ export default {
       for (var i = 0; i <= 4; i++) {
         if (i <= 4) {
           axios({
-            url: `/top/list?idx=${i}`
-          }).then(res => {
+            url: `/top/list?idx=${i}`,
+          }).then((res) => {
             let { playlist } = res.data;
             this.officials.push(playlist);
           });
@@ -86,37 +91,35 @@ export default {
       }
       for (var a = 5; a <= 33; a++) {
         axios({
-          url: `/top/list?idx=${a}`
+          url: `/top/list?idx=${a}`,
         })
-          .then(res => {
+          .then((res) => {
             let { playlist } = res.data;
             this.morelist.push(playlist);
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       }
-    }
+    },
   },
   mounted() {
     //
     this.official();
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .morelist {
-  .morelist-item:nth-last-child(1),
-  .morelist-item:nth-last-child(2),
-  .morelist-item:nth-last-child(3) {
-    margin-bottom: 3rem;
+  .morelist-item:nth-last-child(1) {
+    margin-bottom: 2rem;
   }
   .morelist-item {
     float: left;
     width: 30%;
     height: 8.4375rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     margin-left: 0.33rem;
     .list-top {
       text-align: left;
@@ -142,7 +145,7 @@ export default {
 .rank {
   width: 90%;
   margin: auto;
-  margin-bottom: 4.75rem;
+  margin-top: 3rem;
 }
 .About {
   .rank-item {

@@ -39,7 +39,7 @@
     <div class="playTime">
       <mt-range :barHeight="num" v-model="rangeValue">
         <!-- 当前播放时间 -->
-        <div slot="start" ref="currttime">{{ currentTime }}</div>
+        <div slot="start" ref="currttime" v-text="currentTime"></div>
         <div slot="end">{{ maxTime }}</div>
         <!-- 总时长 -->
       </mt-range>
@@ -117,6 +117,7 @@ export default {
         }
       });
       this.currentTime = this.timetransform(this.currentTime);
+      console.log(this.currentTime);
     },
     // 返回上一层
     go() {

@@ -1,11 +1,7 @@
 <template>
   <div class="Isme">
     <!-- 返回按钮 -->
-    <div
-      class="go iconfont 1_music83
-icon-1_music83"
-      @click="goTo"
-    ></div>
+    <div class="go iconfont icon-ffanhui-" @click="goTo"></div>
     <div
       class="header"
       :style="{ backgroundImage: 'url(' + this.coverImgUrl + ')' }"
@@ -160,8 +156,10 @@ export default {
   .go {
     position: absolute;
     top: 0;
-    left: -0.6875rem;
+    left: 0;
     font-size: 2rem;
+    color: #26a2ff;
+    opacity: 0.6;
   }
   .header {
     width: 100%;
